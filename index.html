@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TGM Self Check-In Station</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #b51f1f, #5a0c0c);
+    color: #ffd36b;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+    max-width: 720px;
+    margin: auto;
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 15px;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+}
+
+.main-logo {
+    width: 150px;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
+}
+
+table {
+    width: 100%;
+    border-spacing: 20px;
+}
+
+td {
+    text-align: center;
+}
+
+.btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ffd36b;
+}
+
+.btn img {
+    width: 115px;
+    border-radius: 50%;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+}
+
+.btn:active img {
+    transform: scale(0.95);
+}
+
+.label {
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* Center last row */
+.center-cell {
+    text-align: center;
+}
+
+@media (min-width: 600px) {
+    h1 { font-size: 32px; }
+    .main-logo { width: 180px; }
+    .btn img { width: 135px; }
+    .label { font-size: 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>TGM Self Check-In Station</h1>
+
+<img src="Self Checkin.png" class="main-logo" alt="Self Check In">
+
+<table>
+<tr>
+<td>
+<button class="btn" onclick="gomeeting()">
+<img src="meeting.png">
+<div class="label">TGM Meeting</div>
+</button>
+</td>
+
+<td>
+<button class="btn" onclick="goservice()">
+<img src="Service.png">
+<div class="label">TGM Service</div>
+</button>
+</td>
+</tr>
+
+<tr>
+<td>
+<button class="btn" onclick="gobible()">
+<img src="bible.png">
+<div class="label">Bible Study</div>
+</button>
+</td>
+
+<td>
+<button class="btn" onclick="gopopcorn()">
+<img src="popcorn.png">
+<div class="label">Popcorn Club</div>
+</button>
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="center-cell">
+<button class="btn" onclick="gohomeless()">
+<img src="Homeless.png">
+<div class="label">Homeless Service</div>
+</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+<script>
+function gomeeting(){
+    window.location.href = "https://taghamatmalaika.github.io/self_checkin/meeting.html";
+}
+function goservice(){
+    window.location.href = "https://taghamatmalaika.github.io/self_checkin/service.html";
+}
+function gobible(){
+    window.location.href = "https://taghamatmalaika.github.io/self_checkin/biblestudy.html";
+}
+function gopopcorn(){
+    window.location.href = "https://taghamatmalaika.github.io/self_checkin/popcorn.html";
+}
+function gohomeless(){
+    window.location.href = "https://taghamatmalaika.github.io/self_checkin/homeless.html";
+}
+</script>
+
+</body>
+</html>
