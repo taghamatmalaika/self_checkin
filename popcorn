@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Popcorn Club QR Code → Self Check-In Station</title>
+
+  <!-- Minimal styling -->
+  <style>
+    #reader {
+  width: 100%;
+  min-height: 360px;   /* important */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+    body { font-family: system-ui, Arial; margin: 16px; }
+    .card { max-width: 520px; margin: 0 auto; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
+    #reader { width: 100%; }
+    .row { display:flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    button { padding: 10px 12px; border-radius: 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+    button.primary { border: none; background: #111; color: #fff; }
+    .hint { color: #555; font-size: 14px; margin-top: 8px; }
+    .status { margin-top: 10px; font-size: 14px; }
+    .ok { color: #0a7; }
+    .bad { color: #c00; }
+    code { background: #f6f6f6; padding: 2px 6px; border-radius: 6px; }
+  </style>
+
+  <!-- QR Scanner library (works well on iOS Safari too) -->
+  <script src="./libs/html5-qrcode.min.js"></script>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Popcorn Club QR Code → Self Check-In Station</h2>
+
+    <div id="reader"></div>
+
+    <div class="row">
+      <button id="startBtn" class="primary">Start Camera</button>
+      <button id="stopBtn">Stop</button>
+      <button id="flipBtn">Flip Camera</button>
+    </div>
+
+    <div class="hint">
+      Scan yout QR Code → Check your data → Click "Attendance Button".
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    // ✅ Your AppSheet base (spaces must be encoded as %20)
+    const BASE_URL =
+      "https://www.appsheet.com/start/dc1bec1a-bfcd-45cd-86f7-c1966164f7dc#control=Members%20Popcorn%20Club_Detail&row=";
+
+    const statusEl = document.getElementById("status");
+    const startBtn  = document.getElementById("startBtn");
+    const stopBtn   = document.getElementById("stopBtn");
+    const flipBtn   = document.getElementById("flipBtn");
+
+    let html5QrCode = null;
+    let currentFacingMode = "environment"; // back camera first
+    let alreadyOpened = false;
+
+    function setStatus(msg, cls="") {
+      statusEl.className = "status " + cls;
+      statusEl.textContent = msg;
+    }
+
+    function buildUrl(digits) {
+      // digits are safe, but we still encode
+      return BASE_URL + encodeURIComponent(digits);
+    }
+
+    function isDigitsOnly(text) {
+      return /^[0-9]+$/.test(text);
+    }
+
+    async function startScanner() {
+      alreadyOpened = false;
+      setStatus("Starting camera…");
+
+      if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+
+      const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        // Important for iOS: prefer this constraint style
+        videoConstraints: { facingMode: currentFacingMode }
+      };
+
+      try {
+        await html5QrCode.start(
+          config.videoConstraints,
+          config,
+          (decodedText) => {
+            if (alreadyOpened) return;
+
+            const raw = (decodedText || "").trim();
+            if (!isDigitsOnly(raw)) {
+              setStatus(`Scanned but not digits-only: "${raw}"`, "bad");
+              return;
+            }
+
+            alreadyOpened = true;
+            const url = buildUrl(raw);
+            setStatus(`Opening: ${url}`, "ok");
+
+            // Most reliable on iOS: open in SAME tab
+            window.location.href = url;
+          },
+          (errorMessage) => {
+            // ignore scan errors to avoid noisy UI
+          }
+        );
+
+        setStatus("Camera started. Point to QR…", "ok");
+      } catch (e) {
+        setStatus("Camera failed to start. Make sure you’re on HTTPS and allowed camera access.", "bad");
+        console.error(e);
+      }
+    }
+
+    async function stopScanner() {
+      try {
+        if (html5QrCode && html5QrCode.isScanning) {
+          await html5QrCode.stop();
+          await html5QrCode.clear();
+          setStatus("Stopped.");
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    startBtn.addEventListener("click", startScanner);
+    stopBtn.addEventListener("click", stopScanner);
+
+    flipBtn.addEventListener("click", async () => {
+      // Switch between front/back camera
+      currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+      setStatus("Switching camera…");
+      await stopScanner();
+      await startScanner();
+    });
+  </script>
+</body>
+</html>
