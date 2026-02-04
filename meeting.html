@@ -40,6 +40,7 @@
 
     <div class="row">
       <button id="startBtn" class="primary">Start Camera</button>
+      <button id="stopBtn">Stop</button>
       <button id="flipBtn">Flip Camera</button>
     </div>
 
@@ -58,6 +59,7 @@
 
     const statusEl = document.getElementById("status");
     const startBtn  = document.getElementById("startBtn");
+    const stopBtn   = document.getElementById("stopBtn");
     const flipBtn   = document.getElementById("flipBtn");
 
     let html5QrCode = null;
@@ -136,11 +138,13 @@
     }
 
     startBtn.addEventListener("click", startScanner);
+    stopBtn.addEventListener("click", stopScanner);
 
     flipBtn.addEventListener("click", async () => {
       // Switch between front/back camera
       currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
       setStatus("Switching camera…");
+      await stopScanner();
       await startScanner();
     });
   </script>
