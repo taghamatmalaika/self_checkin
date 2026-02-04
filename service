@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TGM Meeting QR Code → Self Check-In Station</title>
+  <title>TGM Service QR Code → Self Check-In Station</title>
 
   <!-- Minimal styling -->
   <style>
@@ -34,7 +34,7 @@
 
 <body>
   <div class="card">
-    <h2>TGM Meeting QR Code → Self Check-In Station</h2>
+    <h2>TGM Service QR Code → Self Check-In Station</h2>
 
     <div id="reader"></div>
 
